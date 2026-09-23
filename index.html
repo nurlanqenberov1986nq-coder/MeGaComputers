@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Çayxana Satış</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand" id="brandName">Çay Evi</div>
+    <nav class="tabs">
+      <button class="tab active" data-view="tables">Masalar</button>
+      <button class="tab" data-view="menu">Menyu</button>
+      <button class="tab" data-view="reports">Hesabat</button>
+      <button class="tab" data-view="settings">Ayarlar</button>
+    </nav>
+    <div class="clock" id="clock"></div>
+  </header>
+
+  <main>
+    <!-- MASALAR -->
+    <section class="view active" id="view-tables">
+      <div class="tables-grid" id="tablesGrid"></div>
+    </section>
+
+    <!-- SİFARİŞ -->
+    <section class="view" id="view-order">
+      <div class="order-layout">
+        <div class="menu-side">
+          <div class="order-head">
+            <button class="btn ghost" id="backToTables">← Masalar</button>
+            <input type="search" id="itemSearch" placeholder="Məhsul axtar...">
+          </div>
+          <div class="cats" id="catBar"></div>
+          <div class="items-grid" id="itemsGrid"></div>
+        </div>
+        <aside class="ticket">
+          <h2 id="ticketTitle">Masa</h2>
+          <div class="ticket-lines" id="ticketLines"></div>
+          <div class="ticket-adjust">
+            <label>Endirim %
+              <input type="number" id="discountInput" min="0" max="100" step="1" value="0">
+            </label>
+            <label>Qeyd
+              <input type="text" id="noteInput" placeholder="Məs: şəkərsiz">
+            </label>
+          </div>
+          <div class="totals" id="ticketTotals"></div>
+          <div class="ticket-actions">
+            <button class="btn ghost" id="printBill">Hesab çap et</button>
+            <button class="btn danger" id="cancelOrder">Ləğv et</button>
+            <button class="btn primary big" id="payBtn">Ödəniş</button>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- MENYU -->
+    <section class="view" id="view-menu">
+      <div class="panel">
+        <h2>Məhsul əlavə et / redaktə et</h2>
+        <form id="itemForm" class="form-row">
+          <input type="hidden" id="itemId">
+          <input type="text" id="itemName" placeholder="Ad" required>
+          <input type="text" id="itemCat" placeholder="Kateqoriya" list="catList" required>
+          <datalist id="catList"></datalist>
+          <input type="number" id="itemPrice" placeholder="Qiymət (₼)" min="0" step="0.01" required>
+          <button class="btn primary" type="submit">Yadda saxla</button>
+          <button class="btn ghost" type="button" id="itemFormReset">Təmizlə</button>
+        </form>
+      </div>
+      <div class="panel">
+        <table class="data" id="menuTable">
+          <thead><tr><th>Ad</th><th>Kateqoriya</th><th class="num">Qiymət</th><th>Aktiv</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- HESABAT -->
+    <section class="view" id="view-reports">
+      <div class="panel form-row">
+        <label>Başlanğıc <input type="date" id="repFrom"></label>
+        <label>Son <input type="date" id="repTo"></label>
+        <button class="btn primary" id="repRun">Göstər</button>
+        <button class="btn ghost" id="repToday">Bu gün</button>
+        <button class="btn ghost" id="repCsv">CSV yüklə</button>
+      </div>
+      <div class="stats" id="repStats"></div>
+      <div class="report-cols">
+        <div class="panel">
+          <h2>Ən çox satılanlar</h2>
+          <table class="data" id="repTop"><thead><tr><th>Məhsul</th><th class="num">Say</th><th class="num">Məbləğ</th></tr></thead><tbody></tbody></table>
+        </div>
+        <div class="panel">
+          <h2>Çeklər</h2>
+          <table class="data" id="repSales"><thead><tr><th>№</th><th>Tarix</th><th>Masa</th><th>Ödəniş</th><th class="num">Məbləğ</th><th></th></tr></thead><tbody></tbody></table>
+        </div>
+      </div>
+    </section>
+
+    <!-- AYARLAR -->
+    <section class="view" id="view-settings">
+      <div class="panel">
+        <h2>Müəssisə</h2>
+        <form id="settingsForm" class="settings-grid">
+          <label>Ad <input type="text" id="setName"></label>
+          <label>Ünvan / telefon <input type="text" id="setAddress"></label>
+          <label>Masa sayı <input type="number" id="setTables" min="1" max="200"></label>
+          <label>Xidmət haqqı % <input type="number" id="setService" min="0" max="100" step="0.5"></label>
+          <label>Çek altı mətn <input type="text" id="setFooter"></label>
+          <div><button class="btn primary" type="submit">Yadda saxla</button></div>
+        </form>
+      </div>
+      <div class="panel">
+        <h2>Ehtiyat nüsxə</h2>
+        <p class="muted">Bütün məlumatlar bu brauzerdə saxlanılır. Mütəmadi olaraq ehtiyat nüsxə yükləyin.</p>
+        <div class="form-row">
+          <button class="btn primary" id="backupBtn">Ehtiyat nüsxəni yüklə</button>
+          <label class="btn ghost file-btn">Ehtiyat nüsxədən bərpa et
+            <input type="file" id="restoreInput" accept="application/json">
+          </label>
+          <button class="btn danger" id="clearSales">Satış tarixçəsini sil</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ÖDƏNİŞ PƏNCƏRƏSİ -->
+  <dialog id="payDialog">
+    <form method="dialog" class="pay-form">
+      <h2>Ödəniş</h2>
+      <div class="pay-total" id="payTotal"></div>
+      <div class="pay-methods">
+        <label><input type="radio" name="method" value="Nağd" checked> Nağd</label>
+        <label><input type="radio" name="method" value="Kart"> Kart</label>
+      </div>
+      <label id="cashRow">Alınan məbləğ (₼)
+        <input type="number" id="cashGiven" min="0" step="0.01">
+      </label>
+      <div class="change" id="changeOut"></div>
+      <div class="dialog-actions">
+        <button class="btn ghost" value="cancel">Bağla</button>
+        <button class="btn primary big" id="confirmPay" value="ok">Təsdiqlə və çek çap et</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- ÇEK (çap üçün) -->
+  <div id="receipt" class="receipt"></div>
+
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
